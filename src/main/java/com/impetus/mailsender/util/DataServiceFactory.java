@@ -1,12 +1,11 @@
 package com.impetus.mailsender.util;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.impetus.mailsender.service.DBService;
 import com.impetus.mailsender.service.DataService;
 import com.impetus.mailsender.service.PivotService;
@@ -36,11 +35,14 @@ public class DataServiceFactory {
      * 
      * @return */
     public static boolean pingPivot() {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress("http://pivot.impetus.co.in", 8088), 10000);
+        String webEndPoint = "http://pivot.impetus.co.in:8088/wishes/getLocations";
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<ArrayNode> responseEntity = restTemplate.getForEntity(webEndPoint, ArrayNode.class);
+        if (responseEntity.getStatusCodeValue() == 200) {
             return true;
-        } catch (IOException e) {
-            return false; // Either timeout or unreachable or failed DNS lookup.
+        } else {
+            return false;
         }
     }
+
 }
