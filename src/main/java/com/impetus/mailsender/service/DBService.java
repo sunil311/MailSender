@@ -1,6 +1,7 @@
 package com.impetus.mailsender.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -27,7 +28,8 @@ public class DBService implements DataService {
     @Autowired
     EntityManagerFactory entityManagerFactory;
 
-    public List<Employee> getEmployees(Filter filter) {
+    @Override
+    public List<Employee> getEmployees(Filter filter, Date mailDate) {
         List<Employee> employees = new ArrayList<Employee>();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -49,10 +51,10 @@ public class DBService implements DataService {
             entityManager.close();
         }
         List<Employee> updatedEmployees = DataHelper.applyFilter(employees, filter);
-        System.out.println(updatedEmployees);
         return updatedEmployees;
     }
 
+    /** @param employees */
     public void loadEmployees(List<Employee> employees) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -73,6 +75,9 @@ public class DBService implements DataService {
         }
     }
 
+    /** @param empId
+     * @return */
+    @SuppressWarnings("unchecked")
     public Employee getEmployeeByEmpId(String empId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         Employee employee = null;

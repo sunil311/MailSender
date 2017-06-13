@@ -22,11 +22,11 @@ public class MailService {
     @Autowired
     private VelocityEngine velocityEngine;
 
+    /** @param employee */
     public void sendEmail(Employee employee) {
         logger.info("Sending mail to " + employee);
         logger.debug("birthday details " + employee.toString());
-        MimeMessagePreparator preparator = EmailHelper.getMessagePreparator(
-                velocityEngine, employee);
+        MimeMessagePreparator preparator = EmailHelper.getMessagePreparator(velocityEngine, employee);
         try {
             mailSender.send(preparator);
         } catch (MailException ex) {

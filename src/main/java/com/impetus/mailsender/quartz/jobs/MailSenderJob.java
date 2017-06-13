@@ -34,6 +34,9 @@ public class MailSenderJob implements Job {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    Filter filter;
+
     private final static Logger logger = LoggerFactory.getLogger(MailSenderJob.class);
     @Value("${cron.frequency.jobwithcrontrigger}")
     private String frequency;
@@ -43,11 +46,11 @@ public class MailSenderJob implements Job {
         try {
             if (employeeService != null && employeeService.getDataService() != null) {
                 int mailCounter = EmailHelper.getMailCounter();
-                for (int i = mailCounter - 1; i >= 0; i--) {
+                for (int counter = mailCounter - 1; counter >= 0; counter--) {
                     Calendar c = Calendar.getInstance();
-                    c.add(Calendar.DATE, -i);
+                    c.add(Calendar.DATE, -counter);
                     Date mailDate = c.getTime();
-                    sendMail(i, mailDate);
+                    sendMail(counter, mailDate);
                 }
             } else {
                 throw new BWisherException("Email sending failed. EmployeeService is null. Please set EmployeeService first and try again.");
@@ -58,14 +61,21 @@ public class MailSenderJob implements Job {
         logger.info("Running MailSenderJob | frequency {}", frequency);
     }
 
-    private void sendMail(int i, Date mailDate) throws ParseException, FileNotFoundException, IOException {
+    /**
+     * 
+     * @param counter
+     * @param mailDate
+     * @throws ParseException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    private void sendMail(int counter, Date mailDate) throws ParseException, FileNotFoundException, IOException {
         if (!EmailHelper.checkMailStatus(mailDate)) {
-            Filter filter = new Filter(null, null, null, null, null, null);
-            List<Employee> employees = employeeService.getDataService().getEmployees(filter);
+            List<Employee> employees = employeeService.getDataService().getEmployees(filter, mailDate);
             if (employees != null && !employees.isEmpty()) {
                 for (Employee employee : employees) {
                     if (employee.getSUBJECT().equalsIgnoreCase("Birthday")) {
-                        if (i != 0) {
+                        if (counter != 0) {
                             employee.setSUBJECT("Belated " + employee.getSUBJECT());
                         } else {
                             employee.setSUBJECT(employee.getSUBJECT());

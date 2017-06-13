@@ -106,7 +106,7 @@ public class Employee implements Serializable, Cloneable {
     public String toString() {
         return "Employee [id=" + id + ", templateName=" + templateName + ", NAME=" + NAME + ", IMGURL=" + IMGURL + ", SUBJECT=" + SUBJECT + ", EMAIL="
                 + EMAIL + ", empId=" + empId + ", client=" + client + ", project=" + project + ", bDay=" + bDay + ", anniversary=" + anniversary
-                + ", doj=" + doj + ", location=" + location + "]";
+                + ", doj=" + doj + ", locations=" + location + "]";
     }
 
     public Integer getId() {

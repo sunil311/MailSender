@@ -1,22 +1,40 @@
 package com.impetus.mailsender.beans;
 
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Filter {
-    public Filter(String client, String project, Date dob, Date doj, Date doa, String location) {
-        super();
-        this.client = client;
-        this.project = project;
-        this.dob = dob;
-        this.doj = doj;
-        this.doa = doa;
-        this.location = location;
+    @Value("${filter.clients}")
+    private String clients[];
+
+    @Value("${filter.occations}")
+    private String occations[];
+
+    @Value("${filter.locations}")
+    private String locations[];
+
+    public String[] getClients() {
+        return clients;
     }
 
-    public String client;
-    public String project;
-    public Date dob;
-    public Date doj;
-    public Date doa;
-    public String location;
+    public void setClients(String[] clients) {
+        this.clients = clients;
+    }
+
+    public String[] getOccations() {
+        return occations;
+    }
+
+    public void setOccations(String[] occations) {
+        this.occations = occations;
+    }
+
+    public String[] getLocations() {
+        return locations;
+    }
+
+    public void setLocations(String[] locations) {
+        this.locations = locations;
+    }
 }

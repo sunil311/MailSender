@@ -62,6 +62,7 @@ http://www.springframework.org/schema/task http://www.springframework.org/schema
 		<property name="locations">
 			<list>
 				<value>classpath:mailsender-custom.properties</value>
+				<value>classpath:filters.properties</value>
 			</list>
 		</property>
 	</bean>

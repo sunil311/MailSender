@@ -17,6 +17,10 @@ import com.impetus.mailsender.beans.Employee;
 import com.impetus.mailsender.beans.Filter;
 
 public class DataHelper {
+
+    /** @param csvPath
+     * @return
+     * @throws ParseException */
     public static List<Employee> readEmployeesFromCSV(String csvPath) throws ParseException {
         List<Employee> employees = new ArrayList<>();
         Scanner scanner = null;
@@ -52,6 +56,9 @@ public class DataHelper {
         return employees;
     }
 
+    /** @param dateString
+     * @return
+     * @throws ParseException */
     public static Date formateDate(String dateString) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
         if (StringUtils.isNotBlank(dateString)) {
@@ -61,30 +68,20 @@ public class DataHelper {
         }
     }
 
+    /** @param employees
+     * @param filter
+     * @return */
     public static List<Employee> applyFilter(List<Employee> employees, Filter filter) {
         List<Employee> updatedEmployees = new ArrayList<>();
         try {
-            // for now only date filter
             for (Employee employee : employees) {
                 Date ddMM = getDDMM(new Date());
                 Date dob = getDDMM(employee.getbDay());
-                Date doj = getDDMM(employee.getDoj());
-                Date anniversary = getDDMM(employee.getAnniversary());
-                if (dob != null && ddMM.compareTo(dob) == 0) {
-                    employee.setSUBJECT("Birthday");
-                    Employee emp = employee.copy();
-                    updatedEmployees.add(emp);
+                employee = filterEmployee(filter, updatedEmployees, employee, ddMM, dob);
+                if (employee != null) {
+                    updatedEmployees.add(employee);
                 }
-                if (doj != null && ddMM.compareTo(doj) == 0) {
-                    employee.setSUBJECT("Date Of Joinging");
-                    Employee emp = employee.copy();
-                    updatedEmployees.add(emp);
-                }
-                if (anniversary != null && ddMM.compareTo(anniversary) == 0) {
-                    employee.setSUBJECT("Anniversary");
-                    Employee emp = employee.copy();
-                    updatedEmployees.add(emp);
-                }
+
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -92,7 +89,45 @@ public class DataHelper {
         return updatedEmployees;
     }
 
+    /** @param filter
+     * @param updatedEmployees
+     * @param employee
+     * @param ddMM
+     * @param dob
+     * @param filterLocs
+     * @return */
+    private static Employee filterEmployee(Filter filter, List<Employee> updatedEmployees, Employee employee, Date ddMM, Date dob) {
+        String filterClients[] = filter.getClients();
+        String filterLocs[] = filter.getLocations();
+        boolean locFlag = false;
+        boolean clientFlag = false;
+        boolean dobFlag = false;
+        for (String loc : filterLocs) {
+            if (loc.equalsIgnoreCase(employee.getLocation())) {
+                locFlag = true;
+                break;
+            }
+        }
+        for (String client : filterClients) {
+            if (client.equalsIgnoreCase(employee.getClient())) {
+                clientFlag = true;
+                break;
+            }
+        }
 
+        if (dob != null && ddMM.compareTo(dob) == 0) {
+            employee.setSUBJECT("Birthday");
+            dobFlag = true;
+        }
+        if (locFlag && clientFlag && dobFlag) {
+            return employee;
+        } else
+            return null;
+    }
+
+    /** @param date
+     * @return
+     * @throws ParseException */
     private static Date getDDMM(Date date) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("dd MM");
         if (date != null) {
@@ -100,5 +135,12 @@ public class DataHelper {
             return dateFormat.parse(dateString);
         }
         return null;
+    }
+
+    /** @param date
+     * @return */
+    public static String formateDateYYYYMMDD(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        return dateFormat.format(date);
     }
 }
