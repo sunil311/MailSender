@@ -1,0 +1,7 @@
+/target/MailSender-0.0.1-SNAPSHOT-spring-boot.jar
+/.classpath
+/.project
+/.settings/org.eclipse.core.resources.prefs
+/.settings/org.eclipse.jdt.core.prefs
+/.settings/org.eclipse.m2e.core.prefs
+/target/**

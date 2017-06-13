@@ -52,7 +52,8 @@ public class EmailHelper {
                 messageHelper.setTo(employee.getEMAIL());
                 Map<String, Object> model = new HashMap<>();
                 model.put("name", employee.getNAME());
-                model.put("picUrl", employee.getIMGURL());
+                /* model.put("picUrl", employee.getIMGURL()); */
+                model.put("picUrl", "https://pivot.impetus.co.in/digite/upload/skgupta.jpg");
                 model.put("host", InetAddress.getLocalHost().getHostAddress());
                 model.put("port", "7777");
                 messageHelper.setText(geVelocityTemplateContent(velocityEngine, model, employee.getTemplateName()), true);

@@ -6,7 +6,6 @@ package com.impetus.mailsender.quartz.jobs;
 import java.text.ParseException;
 import java.util.List;
 
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import com.impetus.mailsender.service.DBService;
 import com.impetus.mailsender.util.DataHelper;
 
 @Component
-@DisallowConcurrentExecution
 public class LoadEmployeeJob implements Job {
     @Autowired
     private DBService dbService;
@@ -39,6 +37,7 @@ public class LoadEmployeeJob implements Job {
         try {
             employees = DataHelper.readEmployeesFromCSV(csvDataLocation);
             dbService.loadEmployees(employees);
+            logger.info("Database updated...");
         } catch (ParseException e) {
             e.printStackTrace();
         }

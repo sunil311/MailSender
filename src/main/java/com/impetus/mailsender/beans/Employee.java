@@ -6,16 +6,17 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "EMPLOYEE_DETAILS")
-public class Employee implements Serializable {
+public class Employee implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
 
@@ -43,6 +44,23 @@ public class Employee implements Serializable {
     private Date doj;
     @Column(name = "LOCATION")
     private String location;
+
+    public Employee copy() {
+        Employee employee = new Employee();
+        employee.setAnniversary(this.anniversary);
+        employee.setbDay(this.bDay);
+        employee.setDoj(this.doj);
+        employee.setClient(this.client);
+        employee.setProject(this.project);
+        employee.setTemplateName(this.templateName);
+        employee.setNAME(this.NAME);
+        employee.setIMGURL(this.IMGURL);
+        employee.setSUBJECT(this.SUBJECT);
+        employee.setEMAIL(this.EMAIL);
+        employee.setEmpId(this.empId);
+        employee.setId(this.id);
+        return employee;
+    }
 
     public String getTemplateName() {
         return templateName;
@@ -86,7 +104,9 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return "Employee [NAME=" + NAME + ", EMAIL=" + EMAIL + "]";
+        return "Employee [id=" + id + ", templateName=" + templateName + ", NAME=" + NAME + ", IMGURL=" + IMGURL + ", SUBJECT=" + SUBJECT + ", EMAIL="
+                + EMAIL + ", empId=" + empId + ", client=" + client + ", project=" + project + ", bDay=" + bDay + ", anniversary=" + anniversary
+                + ", doj=" + doj + ", location=" + location + "]";
     }
 
     public Integer getId() {
@@ -152,5 +172,4 @@ public class Employee implements Serializable {
     public void setLocation(String location) {
         this.location = location;
     }
-
 }

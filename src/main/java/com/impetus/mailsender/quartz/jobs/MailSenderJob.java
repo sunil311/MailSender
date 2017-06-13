@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.velocity.exception.VelocityException;
-import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.slf4j.Logger;
@@ -28,7 +27,6 @@ import com.impetus.mailsender.service.MailService;
 import com.impetus.mailsender.util.EmailHelper;
 
 @Component
-@DisallowConcurrentExecution
 public class MailSenderJob implements Job {
     @Autowired
     private MailService mailService;
