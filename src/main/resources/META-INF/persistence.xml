@@ -10,7 +10,7 @@
 			<property name="hibernate.show_sql" value="false" />
 			<property name="hibernate.format_sql" value="false" />
 			<property name="use_sql_comments" value="false" />
-			<!-- <property name="hibernate.hbm2ddl.auto" value="create" /> -->
+			<property name="hibernate.hbm2ddl.auto" value="create" />
 			<property name="jboss.as.jpa.providerModule" value="hibernate3-bundled" />
 		</properties>
 	</persistence-unit>
