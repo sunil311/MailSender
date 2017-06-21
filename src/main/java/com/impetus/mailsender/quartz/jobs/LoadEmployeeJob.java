@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.impetus.mailsender.quartz.jobs;
 
 import java.text.ParseException;

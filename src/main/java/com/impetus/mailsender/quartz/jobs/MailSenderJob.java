@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.impetus.mailsender.quartz.jobs;
 
 import java.io.FileNotFoundException;
@@ -28,6 +25,10 @@ import com.impetus.mailsender.util.EmailHelper;
 
 @Component
 public class MailSenderJob implements Job {
+
+    @Value("${previous.mail.sent.days}")
+    private int previousMailsDay;
+
     @Autowired
     private MailService mailService;
 
@@ -45,7 +46,7 @@ public class MailSenderJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) {
         try {
             if (employeeService != null && employeeService.getDataService() != null) {
-                int mailCounter = EmailHelper.getMailCounter();
+                int mailCounter = EmailHelper.getMailCounter(previousMailsDay);
                 for (int counter = mailCounter - 1; counter >= 0; counter--) {
                     Calendar c = Calendar.getInstance();
                     c.add(Calendar.DATE, -counter);
@@ -61,31 +62,36 @@ public class MailSenderJob implements Job {
         logger.info("Running MailSenderJob | frequency {}", frequency);
     }
 
-    /**
-     * 
-     * @param counter
+    /** @param counter
      * @param mailDate
      * @throws ParseException
      * @throws FileNotFoundException
-     * @throws IOException
-     */
+     * @throws IOException */
     private void sendMail(int counter, Date mailDate) throws ParseException, FileNotFoundException, IOException {
         if (!EmailHelper.checkMailStatus(mailDate)) {
             List<Employee> employees = employeeService.getDataService().getEmployees(filter, mailDate);
             if (employees != null && !employees.isEmpty()) {
                 for (Employee employee : employees) {
-                    if (employee.getSUBJECT().equalsIgnoreCase("Birthday")) {
-                        if (counter != 0) {
-                            employee.setSUBJECT("Belated " + employee.getSUBJECT());
-                        } else {
-                            employee.setSUBJECT(employee.getSUBJECT());
-                        }
-                        mailService.sendEmail(EmailHelper.prepareEmail(employee));
+                    // if (employee.getSUBJECT().equalsIgnoreCase("Birthday")) {
+                    if (counter != 0) {
+                        employee.setSUBJECT("Happy Belated " + employee.getSUBJECT());
+                    } else {
+                        employee.setSUBJECT("Happy " + employee.getSUBJECT());
                     }
+                    mailService.sendEmail(EmailHelper.prepareEmail(employee));
+                    // }
                 }
                 // Updating flag file
                 EmailHelper.updateFlagFile(mailDate);
             }
         }
+    }
+
+    public int getPreviousMailsDay() {
+        return previousMailsDay;
+    }
+
+    public void setPreviousMailsDay(int previousMailsDay) {
+        this.previousMailsDay = previousMailsDay;
     }
 }

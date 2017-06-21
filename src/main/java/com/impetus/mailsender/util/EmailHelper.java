@@ -23,6 +23,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.ui.velocity.VelocityEngineUtils;
@@ -32,6 +33,9 @@ import com.impetus.mailsender.exception.BWisherException;
 
 @SuppressWarnings("deprecation")
 public class EmailHelper {
+
+    @Value("${previous.mail.sent.days}")
+    private int previousMailSentDays;
 
     static Logger logger = LoggerFactory.getLogger(EmailHelper.class);
 
@@ -52,8 +56,8 @@ public class EmailHelper {
                 messageHelper.setTo(employee.getEMAIL());
                 Map<String, Object> model = new HashMap<>();
                 model.put("name", employee.getNAME());
-                /* model.put("picUrl", employee.getIMGURL()); */
-                model.put("picUrl", "https://pivot.impetus.co.in/digite/upload/skgupta.jpg");
+                model.put("picUrl", employee.getIMGURL());
+                // model.put("picUrl", "https://pivot.impetus.co.in/digite/upload/skgupta.jpg");
                 model.put("host", InetAddress.getLocalHost().getHostAddress());
                 model.put("port", "7777");
                 messageHelper.setText(geVelocityTemplateContent(velocityEngine, model, employee.getTemplateName()), true);
@@ -84,7 +88,11 @@ public class EmailHelper {
      * @param employee
      * @return */
     public static Employee prepareEmail(Employee employee) {
-        String template = selectTemplateName();
+        String templateFolder = "Birthday";
+        if (!"Birthday".contains(employee.getSUBJECT())) {
+            templateFolder = "Anniversary";
+        }
+        String template = selectTemplateName(templateFolder);
         logger.debug("template name :" + template);
         employee.setTemplateName(template);
         return employee;
@@ -94,8 +102,8 @@ public class EmailHelper {
      * /src/main/resources/main/templates folder.
      * 
      * @return */
-    private static String selectTemplateName() {
-        String templatePath = "mail/templates";
+    private static String selectTemplateName(String occation) {
+        String templatePath = "mail/templates/" + occation;
         File file = new File(EmailHelper.class.getClassLoader().getResource(templatePath).getFile());
         File[] templates = null;
         String template = "";
@@ -115,7 +123,7 @@ public class EmailHelper {
 
     /** @return
      * @throws ParseException */
-    public static int getMailCounter() throws ParseException {
+    public static int getMailCounter(int previousMailsDay) throws ParseException {
         Date lastSentDate = getLastSentDate();
         if (lastSentDate == null) {
             return 1;
@@ -125,7 +133,6 @@ public class EmailHelper {
 
         // If month is different
 
-        int previousMailsDay = 10;
         if (mailCounter > previousMailsDay) {
             mailCounter = previousMailsDay;
         }
@@ -195,5 +202,13 @@ public class EmailHelper {
             }
         }
         return mailSent;
+    }
+
+    public int getPreviousMailSentDays() {
+        return previousMailSentDays;
+    }
+
+    public void setPreviousMailSentDays(int previousMailSentDays) {
+        this.previousMailSentDays = previousMailSentDays;
     }
 }

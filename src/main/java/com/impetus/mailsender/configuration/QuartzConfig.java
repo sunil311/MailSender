@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.impetus.mailsender.configuration;
 
 import java.io.IOException;
@@ -34,10 +31,10 @@ import com.impetus.mailsender.quartz.jobs.MailSenderJob;
 public class QuartzConfig {
     @Value("${cron.frequency.jobwithcrontrigger}")
     private String frequency;
-    
+
     @Value("${cron.frequency.dataLoadFrequency}")
     private String dataLoadFrequency;
-    
+
     @Autowired
     List<Trigger> triggers;
 
