@@ -1,5 +1,7 @@
 package com.impetus.mailsender.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,8 @@ import com.impetus.mailsender.service.PivotService;
 @Component
 public class DataServiceFactory {
 
+    private final static Logger logger = LoggerFactory.getLogger(DataServiceFactory.class);
+
     @Autowired
     private PivotService pivotService;
 
@@ -24,9 +28,12 @@ public class DataServiceFactory {
      * 
      * @return */
     public DataService getInstance() {
+        logger.debug("getting service instance");
         if (pingPivot()) {
+            logger.debug("processing using pivot service");
             return pivotService;
         } else {
+            logger.debug("processing using database service");
             return dbService;
         }
     }

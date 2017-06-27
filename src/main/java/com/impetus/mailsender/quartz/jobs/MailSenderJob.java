@@ -74,7 +74,7 @@ public class MailSenderJob implements Job {
                 for (Employee employee : employees) {
                     // if (employee.getSUBJECT().equalsIgnoreCase("Birthday")) {
                     if (counter != 0) {
-                        employee.setSUBJECT("Happy Belated " + employee.getSUBJECT());
+                        employee.setSUBJECT("Belated Happy" + employee.getSUBJECT());
                     } else {
                         employee.setSUBJECT("Happy " + employee.getSUBJECT());
                     }

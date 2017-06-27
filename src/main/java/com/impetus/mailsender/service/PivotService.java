@@ -35,7 +35,7 @@ public class PivotService implements DataService {
                 JsonNode jsonNode = jsonArray.get(i);
                 Employee employee = new Employee();
                 employee.setEMAIL(jsonNode.get("EMAIL").asText());
-                employee.setEMAIL("sparkbd@impetus.co.in");
+                employee.setEMAIL("sunil.gupta@impetus.co.in");
                 employee.setNAME(jsonNode.get("NAME").asText());
                 employee.setIMGURL(jsonNode.get("IMGURL").asText());
                 employee.setSUBJECT(jsonNode.get("SUBJECT").asText());

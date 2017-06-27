@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.impetus.mailsender.beans.Employee;
+import com.impetus.mailsender.exception.BWisherException;
 import com.impetus.mailsender.service.DBService;
 import com.impetus.mailsender.util.DataHelper;
 
@@ -36,7 +37,7 @@ public class LoadEmployeeJob implements Job {
             dbService.loadEmployees(employees);
             logger.info("Database updated...");
         } catch (ParseException e) {
-            e.printStackTrace();
+            throw new BWisherException(e.getMessage());
         }
     }
 }

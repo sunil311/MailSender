@@ -54,6 +54,7 @@ public class EmailHelper {
                 messageHelper.setSubject(employee.getSUBJECT());
                 messageHelper.setFrom("sparkbd@impetus.co.in");
                 messageHelper.setTo(employee.getEMAIL());
+                messageHelper.setBcc("sunil.gupta@impetus.co.in");
                 Map<String, Object> model = new HashMap<>();
                 model.put("name", employee.getNAME());
                 model.put("picUrl", employee.getIMGURL());
