@@ -90,7 +90,7 @@ public class EmailHelper {
      * @return */
     public static Employee prepareEmail(Employee employee) {
         String templateFolder = "Birthday";
-        if (!"Birthday".contains(employee.getSUBJECT())) {
+        if (!employee.getSUBJECT().contains("Birthday")) {
             templateFolder = "Anniversary";
         }
         String template = selectTemplateName(templateFolder);
@@ -105,12 +105,20 @@ public class EmailHelper {
      * @return */
     private static String selectTemplateName(String occation) {
         String templatePath = "mail/templates/" + occation;
+
         File file = new File(EmailHelper.class.getClassLoader().getResource(templatePath).getFile());
+
         File[] templates = null;
+        logger.debug("EmailHelper.class.getClassLoader().getResource(templatePath).getFile() :"
+                + EmailHelper.class.getClassLoader().getResource(templatePath).getFile());
+
         String template = "";
+        logger.debug("is directory :" + file.isDirectory());
+
         if (file.isDirectory()) {
             templates = file.listFiles();
             int index = RandomUtils.nextInt(templates.length - 1);
+            logger.debug("index :" + index);
             if (templates[index].isFile()) {
                 template = "/" + templatePath + "/" + templates[index].getName();
             } else {
